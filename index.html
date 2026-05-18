@@ -884,20 +884,24 @@
   }
 
   // ===== GAS SYNC =====
-  let GAS_URL = "https://script.google.com/macros/s/AKfycbw2O-UY5mg0J2MoJePFGQkEroYyfz4CtY6tFBhk8yp4YGbtiv5RGAn4xPVyEVcJc2br/exec";  // デプロイ後にここにURLを貼る
+  let GAS_URL = "https://script.google.com/macros/s/AKfycbwMWjcZxFAh2JxJaGfW04HGfLslrxTWbBmHbnAK6PpzQeIxgaMT5Hg6UiartbJYMxvh/exec";
 
   async function postToGAS(rec) {
     if (!GAS_URL) return;
     try {
-      await fetch(GAS_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          timestamp: rec.timestamp, date: rec.date, hour: rec.hour,
-          type: rec.type, gender: rec.gender, age_group: rec.age_group,
-          count: rec.count, event: I18N.ja.eventName
-        })
+      const params = new URLSearchParams({
+        timestamp: rec.timestamp,
+        date:      rec.date,
+        hour:      rec.hour,
+        type:      rec.type,
+        gender:    rec.gender,
+        age_group: rec.age_group,
+        count:     rec.count,
+        event:     I18N.ja.eventName
+      });
+      await fetch(GAS_URL + '?' + params.toString(), {
+        method: "GET",
+        mode: "no-cors"
       });
     } catch (err) { console.warn("GAS送信失敗:", err); }
   }
